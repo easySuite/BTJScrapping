@@ -1,0 +1,14 @@
+{
+    "name": "btj/scrapper",
+    "type": "library",
+    "description": "BTJ scrapping library integration",
+    "keywords": [
+        "btj"
+    ],
+   "require": {
+        "fabpot/goutte": "3.2.3"
+   },
+  "autoload": {
+    "psr-4": { "BTJ\\Scrapper\\": "src" }
+  }
+}
