@@ -7,14 +7,21 @@ use BTJ\Scrapper\Container;
 
 class CSLibraryService extends ScrapperService {
 
+    private $responseObject = null;
+
+    public function setResponseObject(Container\Container $obj) {
+        $this->responseObject = $obj;
+    }
+
   public function EventScrap($url) {
     $container = new Container\EventContainer();
 
-    $client = new Client();
-    $crawler = $client->request('GET', $url);
+//    $client = new Client();
+//    $crawler = $client->request('GET', $url);
+      $this->getTransport()->request();
 
     $crawler->filter('h1.page-title')->each(function ($node) use ($container) {
-      $container->setTitle($node->text());
+      $this->responseObject->setTitle($node->text());
     });
 
     $crawler->filter('.page-introduction')->each(function ($node) use ($container) {
@@ -57,6 +64,7 @@ class CSLibraryService extends ScrapperService {
     $tags = $crawler->filter('.tags li')->each(function ($node) {
       return trim(preg_replace('/\s+/', ' ', $node->text()));
     });
+
     $container->setTags($tags);
 
     return $container;
