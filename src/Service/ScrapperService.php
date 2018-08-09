@@ -3,6 +3,7 @@
 namespace BTJ\Scrapper\Service;
 
 use BTJ\Scrapper\Container\Container;
+use BTJ\Scrapper\Container\EventContainerInterface;
 use BTJ\Scrapper\Transport\HttpTransportInterface;
 
 abstract class ScrapperService {
@@ -10,15 +11,15 @@ abstract class ScrapperService {
 
   private $container;
 
-  abstract function EventScrap($url);
+  abstract function EventScrap($url, EventContainerInterface $container);
 
   abstract function NewsScrap($url);
 
   abstract function LibraryScrap($url);
 
-  public function __construct(HttpTransportInterface $transport, Container $container) {
+  public function __construct(HttpTransportInterface $transport/*, Container $container*/) {
     $this->transport = $transport;
-    $this->container = $container;
+//    $this->container = $container;
   }
 
     /**
@@ -31,7 +32,7 @@ abstract class ScrapperService {
     /**
      * @return Container
      */
-  public function getContainer() {
-    return $this->container;
-  }
+//  public function getContainer() {
+//    return $this->container;
+//  }
 }

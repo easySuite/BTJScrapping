@@ -10,16 +10,16 @@ class CSLibraryService extends ScrapperService {
 
     /**
      * @param $url
-     * @return \Container
+     * @return \BTJ\Scrapper\Container\Container
      * @throws BTJException
      */
-  public function EventScrap($url) {
+  public function EventScrap($url, EventContainerInterface $container) {
     $crawler = $this->getTransport()->request('GET', $url);
-    $container = $this->getContainer();
-
-    if (!$container instanceof EventContainerInterface) {
-        throw new BTJException('Only EventContainerInterface objects can be used.');
-    }
+//    $container = $this->getContainer();
+//
+//    if (!$container instanceof EventContainerInterface) {
+//        throw new BTJException('Only EventContainerInterface objects can be used.');
+//    }
 
     $crawler->filter('h1.page-title')->each(function ($node) use
     ($container) {
