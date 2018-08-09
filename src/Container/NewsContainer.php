@@ -4,11 +4,7 @@ namespace BTJ\Scrapper\Container;
 
 
 class NewsContainer extends Container {
-  private $title;
-
   private $lead;
-
-  private $body;
 
   private $ListImage;
 
@@ -22,28 +18,12 @@ class NewsContainer extends Container {
 
   private $tags;
 
-  public function setTitle($title) {
-    $this->title = $title;
-  }
-
-  public function getTitle() {
-    return $this->title;
-  }
-
   public function setLead($lead) {
     $this->lead = $lead;
   }
 
   public function getLead() {
     return $this->lead;
-  }
-
-  public function setBody($body) {
-    $this->body = $body;
-  }
-
-  public function getBody() {
-    return $this->body;
   }
 
   public function setListImage($image) {

@@ -2,26 +2,16 @@
 
 namespace BTJ\Scrapper\Service;
 
-use Goutte\Client;
-use BTJ\Scrapper\Container;
 
 class CSLibraryService extends ScrapperService {
 
-    private $responseObject = null;
-
-    public function setResponseObject(Container\Container $obj) {
-        $this->responseObject = $obj;
-    }
-
   public function EventScrap($url) {
-    $container = new Container\EventContainer();
+    $crawler = $this->getTransport()->request('GET', $url);
+    $container = $this->getContainer();
 
-//    $client = new Client();
-//    $crawler = $client->request('GET', $url);
-      $this->getTransport()->request();
-
-    $crawler->filter('h1.page-title')->each(function ($node) use ($container) {
-      $this->responseObject->setTitle($node->text());
+    $crawler->filter('h1.page-title')->each(function ($node) use
+    ($container) {
+      $container->setTitle($node->text());
     });
 
     $crawler->filter('.page-introduction')->each(function ($node) use ($container) {
@@ -64,17 +54,14 @@ class CSLibraryService extends ScrapperService {
     $tags = $crawler->filter('.tags li')->each(function ($node) {
       return trim(preg_replace('/\s+/', ' ', $node->text()));
     });
-
     $container->setTags($tags);
 
     return $container;
   }
 
   public function NewsScrap($url) {
-    $container = new Container\NewsContainer();
-
-    $client = new Client();
-    $crawler = $client->request('GET', $url);
+    $crawler = $this->getTransport()->request('GET', $url);
+    $container = $this->getContainer();
 
     $crawler->filter('h1.page-title')->each(function ($node) use ($container) {
       $container->setTitle($node->text());
@@ -110,10 +97,8 @@ class CSLibraryService extends ScrapperService {
   }
 
   public function LibraryScrap($url) {
-    $container = new Container\LibraryContainer();
-
-    $client = new Client();
-    $crawler = $client->request('GET', $url);
+    $crawler = $this->getTransport()->request('GET', $url);
+    $container = $this->getContainer();
 
     $crawler->filter('h1.page-title')->each(function ($node) use ($container) {
       $container->setTitle($node->text());
