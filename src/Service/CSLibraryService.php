@@ -4,25 +4,28 @@ namespace BTJ\Scrapper\Service;
 
 
 use BTJ\Scrapper\Container\EventContainerInterface;
-use BTJ\Scrapper\Exception\BTJException;
+use BTJ\Scrapper\Container\LibraryContainerInterface;
+use BTJ\Scrapper\Container\NewsContainerInterface;
 
+/**
+ * Class CSLibraryService.
+ *
+ * @package BTJ\Scrapper\Service
+ */
 class CSLibraryService extends ScrapperService {
 
-    /**
-     * @param $url
-     * @return \BTJ\Scrapper\Container\Container
-     * @throws BTJException
-     */
-  public function EventScrap($url, EventContainerInterface $container) {
+  /**
+   * Scrap a CS Library CMS event page.
+   *
+   * @param string $url
+   *   Event page url.
+   * @param \BTJ\Scrapper\Container\EventContainerInterface $container
+   *   Scrapping container object.
+   */
+  public function eventScrap(string $url, EventContainerInterface $container) : void {
     $crawler = $this->getTransport()->request('GET', $url);
-//    $container = $this->getContainer();
-//
-//    if (!$container instanceof EventContainerInterface) {
-//        throw new BTJException('Only EventContainerInterface objects can be used.');
-//    }
 
-    $crawler->filter('h1.page-title')->each(function ($node) use
-    ($container) {
+    $crawler->filter('h1.page-title')->each(function ($node) use ($container) {
       $container->setTitle($node->text());
     });
 
@@ -67,13 +70,18 @@ class CSLibraryService extends ScrapperService {
       return trim(preg_replace('/\s+/', ' ', $node->text()));
     });
     $container->setTags($tags);
-
-    return $container;
   }
 
-  public function NewsScrap($url) {
+  /**
+   * Scrap a CS Library CMS news page.
+   *
+   * @param string $url
+   *   News page url.
+   * @param \BTJ\Scrapper\Container\NewsContainerInterface $container
+   *   News container object.
+   */
+  public function newsScrap(string $url, NewsContainerInterface $container) : void {
     $crawler = $this->getTransport()->request('GET', $url);
-    $container = $this->getContainer();
 
     $crawler->filter('h1.page-title')->each(function ($node) use ($container) {
       $container->setTitle($node->text());
@@ -95,7 +103,7 @@ class CSLibraryService extends ScrapperService {
       $container->setBody($node->html());
     });
 
-    $targets = $crawler->filter('.audiences a')->each (function ($node) {
+    $targets = $crawler->filter('.audiences a')->each(function ($node) {
       return trim(preg_replace('/\s+/', ' ', $node->text()));
     });
     $container->setTarget($targets);
@@ -104,13 +112,18 @@ class CSLibraryService extends ScrapperService {
       return trim(preg_replace('/\s+/', ' ', $node->text()));
     });
     $container->setTags($tags);
-
-    return $container;
   }
 
-  public function LibraryScrap($url) {
+  /**
+   * Scrap a CS Library CMS library page.
+   *
+   * @param string $url
+   *   Library page url.
+   * @param \BTJ\Scrapper\Container\LibraryContainerInterface $container
+   *   Library container object.
+   */
+  public function libraryScrap(string $url, LibraryContainerInterface $container) : void {
     $crawler = $this->getTransport()->request('GET', $url);
-    $container = $this->getContainer();
 
     $crawler->filter('h1.page-title')->each(function ($node) use ($container) {
       $container->setTitle($node->text());
@@ -140,9 +153,6 @@ class CSLibraryService extends ScrapperService {
       });
       $container->setBody(implode('', $children));
     });
-
-
-
-    return $container;
   }
+
 }

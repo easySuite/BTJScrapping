@@ -1,43 +1,51 @@
 <?php
+
 namespace BTJ\Scrapper;
 
 use BTJ\Scrapper\Container\Container;
-use BTJ\Scrapper\Container\EventContainer;
 use BTJ\Scrapper\Container\EventContainerInterface;
-use BTJ\Scrapper\Exception\BTJException;
 use BTJ\Scrapper\Service\ScrapperService;
 
+/**
+ * Class Crawler.
+ *
+ * @package BTJ\Scrapper
+ */
 class Crawler {
+
   protected $service;
 
+  /**
+   * Crawler constructor.
+   *
+   * @param ScrapperService $service
+   *   Service CMS type used to scrap content.
+   */
   public function __construct(ScrapperService $service) {
-      $this->service = $service;
+    $this->service = $service;
   }
 
-  function getNode($url, Container $container) {
-//    $container = $this->service->getContainer();
-//    $namespace = "BTJ\Scrapper\Container";
-//
-//    $node = NULL;
-//    if (is_a($container, $namespace . '\EventContainer')) {
-//      $node = $this->service->EventScrap($url);
-//    }
-//    elseif (is_a($container, $namespace . '\NewsContainer')) {
-//      $node = $this->service->NewsScrap($url);
-//    }
-//    elseif (is_a($container, $namespace . '\LibraryContainer')) {
-//      $node = $this->service->LibraryScrap($url);
-//    }
-      $node = null;
-
-      if ($container instanceof EventContainerInterface) {
-          $node = $this->service->EventScrap($url, $container);
-      }
-      else {
-          // ...
-      }
-
-
-    return $node;
+  /**
+   * Get node from the external page given by its url.
+   *
+   * @param string $url
+   *   Node url on the external page.
+   * @param Container $container
+   *   Container object.
+   *
+   * @return mixed
+   *   Container or NULL if no container is implemented.
+   */
+  public function getNode($url, Container $container) {
+    if ($container instanceof EventContainerInterface) {
+      $this->service->eventScrap($url, $container);
+    }
+    elseif ($container instanceof NewsContainerInterface) {
+      $this->service->newsScrap($url, $container);
+    }
+    elseif ($container instanceof LibraryContainerInterface) {
+      $this->service->libraryScrap($url, $container);
+    }
   }
+
 }

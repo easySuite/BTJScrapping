@@ -2,11 +2,16 @@
 
 namespace BTJ\Scrapper\Container;
 
-
+/**
+ * Class EventContainer.
+ *
+ * @package BTJ\Scrapper\Container
+ */
 class EventContainer extends Container implements EventContainerInterface {
-  private $ListImage;
 
-  private $TitleImage;
+  private $listImage;
+
+  private $titleImage;
 
   private $category;
 
@@ -24,83 +29,164 @@ class EventContainer extends Container implements EventContainerInterface {
 
   private $tags;
 
-  public function setListImage($image) {
-    $this->ListImage = $image;
+  /**
+   * @inheritdoc
+   */
+  public function setListImage($image) : EventContainer {
+    $this->listImage = $image;
+
+    return $this;
   }
 
-  public function getListImage() {
-    return $this->ListImage;
+  /**
+   * @inheritdoc
+   */
+  public function getListImage() : string {
+    return $this->listImage;
   }
 
-  public function setTitleImage($image) {
-    $this->TitleImage = $image;
+  /**
+   * @inheritdoc
+   */
+  public function setTitleImage($image) : EventContainer {
+    $this->titleImage = $image;
+
+    return $this;
   }
 
-  public function getTitleImage() {
-    return $this->TitleImage;
+  /**
+   * @inheritdoc
+   */
+  public function getTitleImage() : string {
+    return $this->titleImage;
   }
 
-  public function setCategory($category) {
+  /**
+   * @inheritdoc
+   */
+  public function setCategory($category) : EventContainer {
     $this->category = $category;
+
+    return $this;
   }
 
-  public function getCategory() {
+  /**
+   * @inheritdoc
+   */
+  public function getCategory() : string {
     return $this->category;
   }
 
-  public function setDate($date) {
+  /**
+   * @inheritdoc
+   */
+  public function setDate($date) : EventContainer {
     $this->date = $date;
+
+    return $this;
   }
 
-  public function getDate() {
+  /**
+   * @inheritdoc
+   */
+  public function getDate() : string {
     return $this->date;
   }
 
-  public function setMonth($month) {
+  /**
+   * @inheritdoc
+   */
+  public function setMonth($month) : EventContainer {
     $this->month = $month;
+
+    return $this;
   }
 
-  public function getMonth() {
+  /**
+   * @inheritdoc
+   */
+  public function getMonth() : string {
     return $this->month;
   }
 
-  public function setTime($time) {
+  /**
+   * @inheritdoc
+   */
+  public function setTime($time) : EventContainer {
     $this->time = $time;
+
+    return $this;
   }
 
-  public function getTime() {
+  /**
+   * @inheritdoc
+   */
+  public function getTime() : string {
     return $this->time;
   }
 
-  public function setLibrary($library) {
+  /**
+   * @inheritdoc
+   */
+  public function setLibrary($library) : EventContainer {
     $this->library = $library;
+
+    return $this;
   }
 
-  public function getLibrary() {
+  /**
+   * @inheritdoc
+   */
+  public function getLibrary() : string {
     return $this->library;
   }
 
-  public function setPrice($price) {
+  /**
+   * @inheritdoc
+   */
+  public function setPrice($price) : EventContainer {
     $this->price = $price;
+
+    return $this;
   }
 
-  public function getPrice(){
+  /**
+   * @inheritdoc
+   */
+  public function getPrice() : int {
     return $this->price;
   }
 
-  public function setTarget($target) {
+  /**
+   * @inheritdoc
+   */
+  public function setTarget($target) : EventContainer {
     $this->target = $target;
+
+    return $this;
   }
 
-  public function getTarget() {
+  /**
+   * @inheritdoc
+   */
+  public function getTarget() : array {
     return $this->target;
   }
 
-  public function setTags($tags) {
+  /**
+   * @inheritdoc
+   */
+  public function setTags($tags) : EventContainer {
     $this->tags = $tags;
+
+    return $this;
   }
 
-  public function getTags() {
+  /**
+   * @inheritdoc
+   */
+  public function getTags() : array {
     return $this->tags;
   }
+
 }

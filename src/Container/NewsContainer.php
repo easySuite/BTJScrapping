@@ -2,13 +2,18 @@
 
 namespace BTJ\Scrapper\Container;
 
+/**
+ * Class NewsContainer.
+ *
+ * @package BTJ\Scrapper\Container
+ */
+class NewsContainer extends Container implements NewsContainerInterface {
 
-class NewsContainer extends Container {
   private $lead;
 
-  private $ListImage;
+  private $listImage;
 
-  private $TitleImage;
+  private $titleImage;
 
   private $category;
 
@@ -18,63 +23,115 @@ class NewsContainer extends Container {
 
   private $tags;
 
-  public function setLead($lead) {
+  /**
+   * @inheritdoc
+   */
+  public function setLead($lead) : NewsContainer {
     $this->lead = $lead;
+
+    return $this;
   }
 
-  public function getLead() {
+  /**
+   * @inheritdoc
+   */
+  public function getLead() : string {
     return $this->lead;
   }
 
-  public function setListImage($image) {
-    $this->ListImage = $image;
+  /**
+   * @inheritdoc
+   */
+  public function setListImage($image) : NewsContainer {
+    $this->listImage = $image;
+
+    return $this;
   }
 
-  public function getListImage() {
-    return $this->ListImage;
+  /**
+   * @inheritdoc
+   */
+  public function getListImage() : string {
+    return $this->listImage;
   }
 
-  public function setTitleImage($image) {
-    $this->TitleImage = $image;
+  /**
+   * @inheritdoc
+   */
+  public function setTitleImage($image) : NewsContainer {
+    $this->titleImage = $image;
+
+    return $this;
   }
 
-  public function getTitleImage() {
-    return $this->TitleImage;
+  /**
+   * @inheritdoc
+   */
+  public function getTitleImage() : string {
+    return $this->titleImage;
   }
 
-  public function setCategory($category) {
-    $this->category = $category;
+  /**
+   * @inheritdoc
+   */
+  public function setCategory($category) : NewsContainer {
+
+    return $this;
   }
 
-  public function getCategory() {
+  /**
+   * @inheritdoc
+   */
+  public function getCategory() : string {
     return $this->category;
   }
 
-  public function getTime() {
-    return $this->time;
-  }
-
-  public function setLibrary($library) {
+  /**
+   * @inheritdoc
+   */
+  public function setLibrary($library) : NewsContainer {
     $this->library = $library;
+
+    return $this;
   }
 
-  public function getLibrary() {
+  /**
+   * @inheritdoc
+   */
+  public function getLibrary() : string {
     return $this->library;
   }
 
-  public function setTarget($target) {
+  /**
+   * @inheritdoc
+   */
+  public function setTarget($target) : NewsContainer {
     $this->target = $target;
+
+    return $this;
   }
 
-  public function getTarget() {
+  /**
+   * @inheritdoc
+   */
+  public function getTarget() : array {
     return $this->target;
   }
 
-  public function setTags($tags) {
+  /**
+   * @inheritdoc
+   */
+  public function setTags($tags) : NewsContainer {
     $this->tags = $tags;
+
+    return $this;
   }
 
-  public function getTags() {
+  /**
+   * @inheritdoc
+   */
+  public function getTags() : array {
     return $this->tags;
   }
+
 }
