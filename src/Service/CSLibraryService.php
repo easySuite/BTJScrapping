@@ -3,11 +3,23 @@
 namespace BTJ\Scrapper\Service;
 
 
+use BTJ\Scrapper\Container\EventContainerInterface;
+use BTJ\Scrapper\Exception\BTJException;
+
 class CSLibraryService extends ScrapperService {
 
+    /**
+     * @param $url
+     * @return \Container
+     * @throws BTJException
+     */
   public function EventScrap($url) {
     $crawler = $this->getTransport()->request('GET', $url);
     $container = $this->getContainer();
+
+    if (!$container instanceof EventContainerInterface) {
+        throw new BTJException('Only EventContainerInterface objects can be used.');
+    }
 
     $crawler->filter('h1.page-title')->each(function ($node) use
     ($container) {

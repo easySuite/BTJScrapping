@@ -1,6 +1,7 @@
 <?php
 namespace BTJ\Scrapper;
 
+use BTJ\Scrapper\Container\EventContainer;
 use BTJ\Scrapper\Service\ScrapperService;
 
 class Crawler {

@@ -3,7 +3,7 @@
 namespace BTJ\Scrapper\Container;
 
 
-class EventContainer extends Container {
+class EventContainer extends Container implements EventContainerInterface {
   private $ListImage;
 
   private $TitleImage;
