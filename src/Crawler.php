@@ -4,6 +4,8 @@ namespace BTJ\Scrapper;
 
 use BTJ\Scrapper\Container\Container;
 use BTJ\Scrapper\Container\EventContainerInterface;
+use BTJ\Scrapper\Container\NewsContainerInterface;
+use BTJ\Scrapper\Container\LibraryContainerInterface;
 use BTJ\Scrapper\Service\ScrapperService;
 
 /**
@@ -46,6 +48,22 @@ class Crawler {
     elseif ($container instanceof LibraryContainerInterface) {
       $this->service->libraryScrap($url, $container);
     }
+  }
+
+  public function getCTLinks($url, Container $container) : array {
+    $links = [];
+
+    if ($container instanceof EventContainerInterface) {
+      $links = $this->service->getEventsUrl($url);
+    }
+//    elseif ($container instanceof NewsContainerInterface) {
+//      $this->service->newsScrap($url, $container);
+//    }
+//    elseif ($container instanceof LibraryContainerInterface) {
+//      $this->service->libraryScrap($url, $container);
+//    }
+
+    return $links;
   }
 
 }

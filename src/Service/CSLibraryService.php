@@ -14,6 +14,15 @@ use BTJ\Scrapper\Container\NewsContainerInterface;
  */
 class CSLibraryService extends ScrapperService {
 
+  public function getEventsUrl($url) : array {
+    $crawler = $this->getTransport()->request('GET', $url);
+    $links = $crawler->filter('a.page-link')->each(function ($node) {
+      return $node->attr('href');
+    });
+
+    return array_unique($links);
+  }
+
   /**
    * Scrap a CS Library CMS event page.
    *
@@ -58,7 +67,7 @@ class CSLibraryService extends ScrapperService {
     });
 
     $crawler->filter('.event-cost > .value')->each(function ($node) use ($container) {
-      $container->setPrice($node->text());
+      $container->setPrice((int) $node->text());
     });
 
     $targets = $crawler->filter('li.audience-value')->each(function ($node) {

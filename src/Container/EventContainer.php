@@ -9,25 +9,43 @@ namespace BTJ\Scrapper\Container;
  */
 class EventContainer extends Container implements EventContainerInterface {
 
-  private $listImage;
+  private $lead = '';
 
-  private $titleImage;
+  private $listImage = '';
 
-  private $category;
+  private $titleImage = '';
 
-  private $date;
+  private $category = '';
 
-  private $month;
+  private $date = '';
 
-  private $time;
+  private $month = '';
 
-  private $library;
+  private $time = '';
 
-  private $price;
+  private $library = '';
 
-  private $target;
+  private $price = 0;
 
-  private $tags;
+  private $target = [];
+
+  private $tags = [];
+
+  /**
+   * @inheritdoc
+   */
+  public function setLead($lead): EventContainer {
+    $this->lead = $lead;
+
+    return $this;
+  }
+
+  /**
+   * @inheritdoc
+   */
+  public function getLead(): string {
+    return $this->lead;
+  }
 
   /**
    * @inheritdoc

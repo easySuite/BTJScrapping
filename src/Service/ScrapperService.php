@@ -28,6 +28,8 @@ abstract class ScrapperService {
    */
   public abstract function eventScrap(string $url, EventContainerInterface $container) : void;
 
+  public abstract function getEventsUrl($url) : array;
+
   /**
    * Parse news page.
    *

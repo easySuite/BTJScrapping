@@ -10,6 +10,25 @@ namespace BTJ\Scrapper\Container;
 interface EventContainerInterface {
 
   /**
+   * Set container lead field.
+   *
+   * @param string $lead
+   *   Lead.
+   *
+   * @return EventContainer
+   *   Event cointainer object.
+   */
+  public function setLead($lead) : EventContainer;
+
+  /**
+   * Get container lead.
+   *
+   * @return string
+   *   Lead.
+   */
+  public function getLead() : string;
+
+  /**
    * Set container list image path.
    *
    * @param string $image
