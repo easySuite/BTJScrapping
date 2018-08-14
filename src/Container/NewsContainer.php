@@ -9,19 +9,19 @@ namespace BTJ\Scrapper\Container;
  */
 class NewsContainer extends Container implements NewsContainerInterface {
 
-  private $lead;
+  private $lead = '';
 
-  private $listImage;
+  private $listImage = '';
 
-  private $titleImage;
+  private $titleImage = '';
 
-  private $category;
+  private $category = '';
 
   private $library;
 
   private $target;
 
-  private $tags;
+  private $tags = [];
 
   /**
    * @inheritdoc

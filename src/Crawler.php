@@ -54,14 +54,14 @@ class Crawler {
     $links = [];
 
     if ($container instanceof EventContainerInterface) {
-      $links = $this->service->getEventsUrl($url);
+      $links = $this->service->getEventsLinks($url);
     }
-//    elseif ($container instanceof NewsContainerInterface) {
-//      $this->service->newsScrap($url, $container);
-//    }
-//    elseif ($container instanceof LibraryContainerInterface) {
-//      $this->service->libraryScrap($url, $container);
-//    }
+    elseif ($container instanceof NewsContainerInterface) {
+      $links = $this->service->getNewsLinks($url);
+    }
+    elseif ($container instanceof LibraryContainerInterface) {
+      $links = $this->service->getLibrariesLinks($url);
+    }
 
     return $links;
   }

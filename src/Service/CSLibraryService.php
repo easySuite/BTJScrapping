@@ -2,7 +2,7 @@
 
 namespace BTJ\Scrapper\Service;
 
-
+use \DateTime;
 use BTJ\Scrapper\Container\EventContainerInterface;
 use BTJ\Scrapper\Container\LibraryContainerInterface;
 use BTJ\Scrapper\Container\NewsContainerInterface;
@@ -14,13 +14,43 @@ use BTJ\Scrapper\Container\NewsContainerInterface;
  */
 class CSLibraryService extends ScrapperService {
 
-  public function getEventsUrl($url) : array {
-    $crawler = $this->getTransport()->request('GET', $url);
+  public function getEventsLinks($url) : array {
+    $links = [];
+    $year = date('Y');
+    for ($i = 1; $i <= 12; $i++) {
+      $month = date('m', strtotime("$i/1/$year"));
+      $first = "$year-$month-01";
+
+      $date = new DateTime($first);
+      $date->modify('last day of this month');
+      $last = $date->format('Y-m-d');
+
+      $crawler = $this->getTransport()->request('GET', $url . "/calendar/html?fDateMin=$first&fDateMax=$last");
+      $month_links = $crawler->filter('a.page-link')->each(function ($node) {
+        return $node->attr('href');
+      });
+      $links = array_merge($links, $month_links);
+    }
+
+    return array_unique(array_filter($links));
+  }
+
+  public function getNewsLinks($url) : array {
+    $crawler = $this->getTransport()->request('GET', $url . '/search/content/html?fType=news&mode=full&no-cache-lang=sv');
     $links = $crawler->filter('a.page-link')->each(function ($node) {
       return $node->attr('href');
     });
 
-    return array_unique($links);
+    return array_filter($links);
+  }
+
+  public function getLibrariesLinks($url) : array {
+    $crawler = $this->getTransport()->request('GET', $url . '/opening-hours?culture=sv');
+    $links = $crawler->filter('a.library-name')->each(function ($node) {
+      return $node->attr('href');
+    });
+
+    return array_filter($links);
   }
 
   /**
@@ -148,7 +178,7 @@ class CSLibraryService extends ScrapperService {
         if ($child->nodeName() == 'script') {
           unset($child);
         }
-        if ($child) {
+        if (!empty($child)) {
           return $child->html();
         }
       });
