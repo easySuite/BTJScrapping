@@ -36,7 +36,7 @@ class CSLibraryService extends ScrapperService {
   }
 
   public function getNewsLinks($url) : array {
-    $crawler = $this->getTransport()->request('GET', $url . '/search/content/html?fType=news&mode=full&no-cache-lang=sv');
+    $crawler = $this->getTransport()->request('GET', $url . '/search/content/html?fType=news');
     $links = $crawler->filter('a.page-link')->each(function ($node) {
       return $node->attr('href');
     });
@@ -164,13 +164,13 @@ class CSLibraryService extends ScrapperService {
   public function libraryScrap(string $url, LibraryContainerInterface $container) : void {
     $crawler = $this->getTransport()->request('GET', $url);
 
-    $crawler->filter('h1.page-title')->each(function ($node) use ($container) {
-      $container->setTitle($node->text());
-    });
+    $title = $crawler->filter('h1.page-title')->first()->text() ?? '';
+    $container->setTitle($title);
 
-    $crawler->filter('.content-image > img')->each(function ($node) use ($container) {
-      $container->setTitleImage($node->attr('src'));
-    });
+    $image = $crawler->filter('.content-image > img')->first()->attr('src') ?? '';
+    $matches = [];
+    preg_match('/(.*?)(\?crop.*?)/', $image, $matches);
+    $container->setTitleImage($matches[1]);
 
     $crawler->filter('.template .zone-1')->each(function ($node) use ($container) {
       $body = '';
@@ -192,6 +192,44 @@ class CSLibraryService extends ScrapperService {
       });
       $container->setBody(implode('', $children));
     });
-  }
 
+    $node = $crawler->filter('.email a')->first();
+    $email = $node->getNode(0) ? $node->text() : '';
+    $container->setEmail($email);
+
+    $node = $crawler->filter('.phone')->last();
+    $phone = $node->getNode(0) ? $node->text() : '';
+    $container->setPhone($phone);
+
+    $node = $crawler->filter('.street')->first();
+    $street = $node->getNode(0) ? $node->text() : '';
+    $container->setStreet($street);
+
+    $node = $crawler->filter('.zip-code')->first();
+    $zip = $node->getNode(0) ? $node->text() : '';
+    $container->setZip($zip);
+
+    $node = $crawler->filter('.city')->first();
+    $city = $node->getNode(0) ? $node->text() : '';
+    $container->setCity($city);
+
+    $day_map = [
+      'måndag' => 0,
+      'tisdag' => 1,
+      'onsdag' => 2,
+      'torsdag' => 3,
+      'fredag' => 4,
+      'lördag' => 5,
+      'söndag' => 6,
+    ];
+    $days = $crawler->filter('.week-day')->each(function ($node) use ($day_map) {
+      return $day_map[$node->text()];
+    });
+
+    $hours = $crawler->filter('ol.hours-list li')->each(function ($node) {
+      return $node->text();
+    });
+    $hours = array_combine($days, $hours);
+    $container->setOpeningHours($hours);
+  }
 }
