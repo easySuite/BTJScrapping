@@ -1,5 +1,5 @@
 {
-    "name": "btj/scrapper",
+    "name": "btj/worker",
     "type": "library",
     "description": "BTJ scrapping library integration",
     "keywords": [
