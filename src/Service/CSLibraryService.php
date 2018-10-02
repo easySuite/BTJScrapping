@@ -139,7 +139,25 @@ class CSLibraryService extends ScrapperService {
     });
 
     $crawler->filter('.template .zone-1')->each(function ($node) use ($container) {
-      $container->setBody($node->html());
+      $body = '';
+      $children = $node->children()->each(function ($child) {
+        if ($child->nodeName() == 'script') {
+          unset($child);
+        }
+        if (!empty($child)) {
+          return $child->html();
+        }
+      });
+
+      $children = array_filter($children, function ($child) {
+        if (!empty($child)) {
+          if (strpos($child, '<strong>') === FALSE &&
+            strpos($child, 'work-widget') === FALSE) {
+            return $child;
+          }
+        }
+      });
+      $container->setBody(implode('', $children));
     });
 
     $targets = $crawler->filter('.audiences a')->each(function ($node) {
@@ -169,8 +187,10 @@ class CSLibraryService extends ScrapperService {
 
     $image = $crawler->filter('.content-image > img')->first()->attr('src') ?? '';
     $matches = [];
-    preg_match('/(.*?)(\?crop.*?)/', $image, $matches);
-    $container->setTitleImage($matches[1]);
+    preg_match('/.*\/(.*)/', $image, $matches);
+    $url = parse_url($image);
+    $image_url = $url['scheme'] . '://' . $url['host'] . '/images/' . $matches[1];
+    $container->setTitleImage($image_url);
 
     $crawler->filter('.template .zone-1')->each(function ($node) use ($container) {
       $body = '';
@@ -185,7 +205,11 @@ class CSLibraryService extends ScrapperService {
 
       $children = array_filter($children, function ($child) {
         if (!empty($child)) {
-          if (strpos($child, '<strong>') === FALSE) {
+          if (strpos($child, '<strong>') === FALSE &&
+            strpos($child, 'code-widget') === FALSE &&
+            strpos($child, 'image-widget') === FALSE &&
+            strpos($child, 'event-occurence-widget') === FALSE &&
+            strpos($child, 'facebook') === FALSE) {
             return $child;
           }
         }
@@ -214,13 +238,13 @@ class CSLibraryService extends ScrapperService {
     $container->setCity($city);
 
     $day_map = [
-      'måndag' => 0,
-      'tisdag' => 1,
-      'onsdag' => 2,
-      'torsdag' => 3,
-      'fredag' => 4,
-      'lördag' => 5,
-      'söndag' => 6,
+      'söndag' => 0,
+      'måndag' => 1,
+      'tisdag' => 2,
+      'onsdag' => 3,
+      'torsdag' => 4,
+      'fredag' => 5,
+      'lördag' => 6,
     ];
     $days = $crawler->filter('.week-day')->each(function ($node) use ($day_map) {
       return $day_map[$node->text()];

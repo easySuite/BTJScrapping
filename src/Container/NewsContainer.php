@@ -19,7 +19,7 @@ class NewsContainer extends Container implements NewsContainerInterface {
 
   private $library;
 
-  private $target;
+  private $target = [];
 
   private $tags = [];
 

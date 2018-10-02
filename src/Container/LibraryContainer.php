@@ -9,21 +9,21 @@ namespace BTJ\Scrapper\Container;
  */
 class LibraryContainer extends Container implements LibraryContainerInterface {
 
-  private $lead;
+  private $lead = '';
 
-  private $titleImage;
+  private $titleImage = '';
 
-  private $email;
+  private $email = '';
 
-  private $phone;
+  private $phone = '';
 
-  private $street;
+  private $street = '';
 
-  private $zip;
+  private $zip = '';
 
-  private $city;
+  private $city = '';
 
-  private $hours;
+  private $hours = [];
 
   /**
    * @inheritdoc
