@@ -69,7 +69,30 @@ class CSLibraryService extends ScrapperService {
     });
 
     $crawler->filter('.page-introduction')->each(function ($node) use ($container) {
-      $container->setBody($node->text());
+      $container->setLead($node->text());
+    });
+
+    $crawler->filter('.template .zone-1')->each(function ($node) use ($container) {
+      $body = '';
+      $children = $node->children()->each(function ($child) {
+        if ($child->nodeName() == 'script') {
+          unset($child);
+        }
+        if (!empty($child)) {
+          return $child->html();
+        }
+      });
+
+      $children = array_filter($children, function ($child) {
+        if (!empty($child)) {
+          if (strpos($child, '<strong>') === FALSE &&
+           strpos($child, 'page-introduction') === FALSE &&
+            strpos($child, 'event-info') === FALSE) {
+            return $child;
+          }
+        }
+      });
+      $container->setBody(implode('', $children));
     });
 
     $crawler->filter('.editorial-image > img')->each(function ($node) use ($container) {
