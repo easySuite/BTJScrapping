@@ -7,7 +7,8 @@ namespace BTJ\Scrapper\Transport;
  *
  * @package BTJ\Scrapper\Transport
  */
-interface HttpTransportInterface {
+interface HttpTransportInterface
+{
 
   /**
    * Request content from the page based on the HTTP method.
@@ -20,6 +21,5 @@ interface HttpTransportInterface {
    * @return mixed
    *   Transport crawler.
    */
-  public function request($method, $url);
-
+    public function request($method, $url);
 }

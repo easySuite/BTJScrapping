@@ -7,150 +7,167 @@ namespace BTJ\Scrapper\Container;
  *
  * @package BTJ\Scrapper\Container
  */
-class LibraryContainer extends Container implements LibraryContainerInterface {
+class LibraryContainer extends Container implements LibraryContainerInterface
+{
 
-  private $lead = '';
+    private $lead = '';
 
-  private $titleImage = '';
+    private $titleImage = '';
 
-  private $email = '';
+    private $email = '';
 
-  private $phone = '';
+    private $phone = '';
 
-  private $street = '';
+    private $street = '';
 
-  private $zip = '';
+    private $zip = '';
 
-  private $city = '';
+    private $city = '';
 
-  private $hours = [];
+    private $hours = [];
 
-  /**
-   * @inheritdoc
-   */
-  public function setLead($lead) : LibraryContainer {
-    $this->lead = $lead;
+    /**
+     * @inheritdoc
+     */
+    public function setLead($lead) : LibraryContainer
+    {
+        $this->lead = $lead;
 
-    return $this;
-  }
+        return $this;
+    }
 
-  /**
-   * @inheritdoc
-   */
-  public function getLead() : string {
-    return $this->lead;
-  }
+    /**
+     * @inheritdoc
+     */
+    public function getLead() : string
+    {
+        return $this->lead;
+    }
 
-  /**
-   * @inheritdoc
-   */
-  public function setTitleImage($image) : LibraryContainer {
-    $this->titleImage = $image;
+    /**
+     * @inheritdoc
+     */
+    public function setTitleImage($image) : LibraryContainer
+    {
+        $this->titleImage = $image;
 
-    return $this;
-  }
+        return $this;
+    }
 
-  /**
-   * @inheritdoc
-   */
-  public function getTitleImage() : string {
-    return $this->titleImage;
-  }
+    /**
+     * @inheritdoc
+     */
+    public function getTitleImage() : string
+    {
+        return $this->titleImage;
+    }
 
 
-  /**
-   * {@inheritdoc}
-   */
-  public function setEmail($email): LibraryContainer {
-    $this->email = $email;
+    /**
+     * {@inheritdoc}
+     */
+    public function setEmail($email): LibraryContainer
+    {
+        $this->email = $email;
 
-    return $this;
-  }
+        return $this;
+    }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function getEmail(): string {
-    return $this->email;
-  }
+    /**
+     * {@inheritdoc}
+     */
+    public function getEmail(): string
+    {
+        return $this->email;
+    }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function setPhone($phone): LibraryContainer {
-    $this->phone = $phone;
+    /**
+     * {@inheritdoc}
+     */
+    public function setPhone($phone): LibraryContainer
+    {
+        $this->phone = $phone;
 
-    return $this;
-  }
+        return $this;
+    }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function getPhone(): string {
-    return $this->phone;
-  }
+    /**
+     * {@inheritdoc}
+     */
+    public function getPhone(): string
+    {
+        return $this->phone;
+    }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function setStreet($street): LibraryContainer {
-    $this->street = $street;
+    /**
+     * {@inheritdoc}
+     */
+    public function setStreet($street): LibraryContainer
+    {
+        $this->street = $street;
 
-    return $this;
-  }
+        return $this;
+    }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function getStreet(): string {
-    return $this->street;
-  }
+    /**
+     * {@inheritdoc}
+     */
+    public function getStreet(): string
+    {
+        return $this->street;
+    }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function setZip($zip): LibraryContainer {
-    $this->zip = $zip;
+    /**
+     * {@inheritdoc}
+     */
+    public function setZip($zip): LibraryContainer
+    {
+        $this->zip = $zip;
 
-    return $this;
-  }
+        return $this;
+    }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function getZip(): string {
-    return $this->zip;
-  }
+    /**
+     * {@inheritdoc}
+     */
+    public function getZip(): string
+    {
+        return $this->zip;
+    }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function setCity($city): LibraryContainer {
-    $this->city = $city;
+    /**
+     * {@inheritdoc}
+     */
+    public function setCity($city): LibraryContainer
+    {
+        $this->city = $city;
 
-    return $this;
-  }
+        return $this;
+    }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function getCity(): string {
-    return $this->city;
-  }
+    /**
+     * {@inheritdoc}
+     */
+    public function getCity(): string
+    {
+        return $this->city;
+    }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function setOpeningHours($hours): LibraryContainer {
-    $this->hours = $hours;
+    /**
+     * {@inheritdoc}
+     */
+    public function setOpeningHours($hours): LibraryContainer
+    {
+        $this->hours = $hours;
 
-    return $this;
-  }
+        return $this;
+    }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function getOpeningHours(): array {
-    return $this->hours;
-  }
+    /**
+     * {@inheritdoc}
+     */
+    public function getOpeningHours(): array
+    {
+        return $this->hours;
+    }
 }

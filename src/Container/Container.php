@@ -7,36 +7,39 @@ namespace BTJ\Scrapper\Container;
  *
  * @package BTJ\Scrapper\Container
  */
-abstract class Container {
+abstract class Container
+{
 
-  private $title;
+    private $title;
 
-  private $body;
+    private $body;
 
-  /**
-   * Set container title.
-   *
-   * @param string $title
-   *   Container title.
-   *
-   * @return \BTJ\Scrapper\Container\Container
-   *   Container object.
-   */
-  public function setTitle($title) : Container {
-    $this->title = $title;
+    /**
+     * Set container title.
+     *
+     * @param string $title
+     *   Container title.
+     *
+     * @return \BTJ\Scrapper\Container\Container
+     *   Container object.
+     */
+    public function setTitle($title): Container
+    {
+        $this->title = $title;
 
-    return $this;
-  }
+        return $this;
+    }
 
-  /**
-   * Get container title string.
-   *
-   * @return string
-   *   Title.
-   */
-  public function getTitle() : string {
-    return $this->title;
-  }
+    /**
+     * Get container title string.
+     *
+     * @return string
+     *   Title.
+     */
+    public function getTitle(): string
+    {
+        return $this->title;
+    }
 
   /**
    * Set container body.
@@ -47,20 +50,21 @@ abstract class Container {
    * @return \BTJ\Scrapper\Container\Container
    *   Container object.
    */
-  public function setBody($body) : Container {
-    $this->body = $body;
+    public function setBody($body): Container
+    {
+        $this->body = $body;
 
-    return $this;
-  }
+        return $this;
+    }
 
-  /**
-   * Get container body.
-   *
-   * @return string
-   *   Body.
-   */
-  public function getBody() : string {
-    return $this->body;
-  }
-
+    /**
+     * Get container body.
+     *
+     * @return string
+     *   Body.
+     */
+    public function getBody(): string
+    {
+        return $this->body;
+    }
 }

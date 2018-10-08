@@ -7,6 +7,6 @@ namespace BTJ\Scrapper\Exception;
  *
  * @package BTJ\Scrapper\Exception
  */
-class BTJException extends \Exception {
-
+class BTJException extends \Exception
+{
 }

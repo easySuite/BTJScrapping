@@ -9,28 +9,30 @@ use Goutte\Client;
  *
  * @package BTJ\Scrapper\Transport
  */
-class GouteHttpTransport implements HttpTransportInterface {
-  private $transport = NULL;
+class GouteHttpTransport implements HttpTransportInterface
+{
+    private $transport = null;
 
-  /**
-   * @inheritdoc
-   */
-  public function request($method, $url) {
-    return $this->getTransport()->request($method, $url);
-  }
-
-  /**
-   * Get transport client.
-   *
-   * @return Client|null
-   *   Transport client.
-   */
-  private function getTransport() {
-    if ($this->transport === NULL) {
-      $this->transport = new Client();
+    /**
+     * @inheritdoc
+     */
+    public function request($method, $url)
+    {
+        return $this->getTransport()->request($method, $url);
     }
 
-    return $this->transport;
-  }
+    /**
+     * Get transport client.
+     *
+     * @return Client|null
+     *   Transport client.
+     */
+    private function getTransport()
+    {
+        if ($this->transport === null) {
+            $this->transport = new Client();
+        }
 
+        return $this->transport;
+    }
 }
