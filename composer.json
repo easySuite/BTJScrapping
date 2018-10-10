@@ -10,5 +10,6 @@
    },
   "autoload": {
     "psr-4": { "BTJ\\Scrapper\\": "src" }
-  }
+  },
+  "minimum-stability": "dev"
 }
