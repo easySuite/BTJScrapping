@@ -168,27 +168,8 @@ class CSLibraryService extends ScrapperService
             $container->setTitleImage($node->attr('src'));
         });
 
-        $crawler->filter('.template .zone-1')->each(function ($node) use ($container) {
-            $body = '';
-            $children = $node->children()->each(function ($child) {
-                if ($child->nodeName() == 'script') {
-                    unset($child);
-                }
-                if (!empty($child)) {
-                    return $child->html();
-                }
-            });
-
-            $children = array_filter($children, function ($child) {
-                if (!empty($child)) {
-                    if (strpos($child, '<strong>') === false &&
-                        strpos($child, 'work-widget') === false) {
-                        return $child;
-                    }
-                }
-            });
-            $container->setBody(implode('', $children));
-        });
+        $body = $crawler->filter('.template .zone-1')->first()->html();
+        $container->setBody($body);
 
         $targets = $crawler->filter('.audiences a')->each(function ($node) {
             return trim(preg_replace('/\s+/', ' ', $node->text()));
