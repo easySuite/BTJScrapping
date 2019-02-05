@@ -109,15 +109,15 @@ class CSLibraryService extends ScrapperService
             $container->setCategory($node->text());
         });
 
-        $crawler->filter('.event-date')->each(function ($node) use ($container) {
+        $crawler->filter('.selected-occurence .event-date')->each(function ($node) use ($container) {
             $container->setDate($node->text());
         });
 
-        $crawler->filter('.event-month')->each(function ($node) use ($container) {
+        $crawler->filter('.selected-occurence .event-month')->each(function ($node) use ($container) {
             $container->setMonth($node->text());
         });
 
-        $crawler->filter('.event-when > .value')->each(function ($node) use ($container) {
+        $crawler->filter('.selected-occurence .event-when > .value')->each(function ($node) use ($container) {
             $container->setTime($node->text());
         });
 
