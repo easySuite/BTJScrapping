@@ -109,15 +109,15 @@ class CSLibraryService extends ScrapperService
             $container->setCategory($node->text());
         });
 
-        $crawler->filter('.event-date')->each(function ($node) use ($container) {
+        $crawler->filter('.selected-occurence .event-date')->each(function ($node) use ($container) {
             $container->setDate($node->text());
         });
 
-        $crawler->filter('.event-month')->each(function ($node) use ($container) {
+        $crawler->filter('.selected-occurence .event-month')->each(function ($node) use ($container) {
             $container->setMonth($node->text());
         });
 
-        $crawler->filter('.event-when > .value')->each(function ($node) use ($container) {
+        $crawler->filter('.selected-occurence .event-when > .value')->each(function ($node) use ($container) {
             $container->setTime($node->text());
         });
 
@@ -168,27 +168,8 @@ class CSLibraryService extends ScrapperService
             $container->setTitleImage($node->attr('src'));
         });
 
-        $crawler->filter('.template .zone-1')->each(function ($node) use ($container) {
-            $body = '';
-            $children = $node->children()->each(function ($child) {
-                if ($child->nodeName() == 'script') {
-                    unset($child);
-                }
-                if (!empty($child)) {
-                    return $child->html();
-                }
-            });
-
-            $children = array_filter($children, function ($child) {
-                if (!empty($child)) {
-                    if (strpos($child, '<strong>') === false &&
-                        strpos($child, 'work-widget') === false) {
-                        return $child;
-                    }
-                }
-            });
-            $container->setBody(implode('', $children));
-        });
+        $body = $crawler->filter('.template .zone-1')->first()->html();
+        $container->setBody($body);
 
         $targets = $crawler->filter('.audiences a')->each(function ($node) {
             return trim(preg_replace('/\s+/', ' ', $node->text()));
