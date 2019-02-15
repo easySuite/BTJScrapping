@@ -218,4 +218,5 @@ interface EventContainerInterface
      *   Collection of tags.
      */
     public function getTags() : array;
+
 }

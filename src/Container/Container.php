@@ -14,6 +14,8 @@ abstract class Container
 
     private $body;
 
+    private $hash = NULL;
+
     /**
      * Set container title.
      *
@@ -66,5 +68,32 @@ abstract class Container
     public function getBody(): string
     {
         return $this->body;
+    }
+
+  /**
+   * Set container hash.
+   *
+   * @param string $hash
+   *   Container hash.
+   *
+   * @return \BTJ\Scrapper\Container\Container
+   *   Container object.
+   */
+    public function setHash($hash): Container
+    {
+        $this->hash = md5($hash);
+
+        return $this;
+    }
+
+  /**
+   * Get container hash.
+   *
+   * @return string
+   *   Body.
+   */
+    public function getHash(): string
+    {
+        return $this->hash;
     }
 }
