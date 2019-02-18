@@ -69,6 +69,16 @@ class CSLibraryService extends ScrapperService
     {
         $crawler = $this->getTransport()->request('GET', $url);
 
+        $classes = $crawler->filter('body')->attr('class');
+        $classes = explode(' ', $classes);
+        $classes = preg_grep("/(page-)(\S+)(-sv)/", $classes);
+
+        $matches = [];
+        preg_match('/[^\/]+$/', $url, $matches);
+        if (!empty($classes) && !empty($matches)) {
+          $container->setHash(reset($classes) . reset($matches));
+        }
+
         $crawler->filter('h1.page-title')->each(function ($node) use ($container) {
             $container->setTitle($node->text());
         });
@@ -101,7 +111,7 @@ class CSLibraryService extends ScrapperService
             $container->setBody(implode('', $children));
         });
 
-        $crawler->filter('.editorial-image > img')->each(function ($node) use ($container) {
+        $crawler->filter('.editorial-image > img.front-img')->each(function ($node) use ($container) {
             $container->setListImage($node->attr('src'));
         });
 
@@ -152,6 +162,14 @@ class CSLibraryService extends ScrapperService
     {
         $crawler = $this->getTransport()->request('GET', $url);
 
+        $classes = $crawler->filter('body')->attr('class');
+        $classes = explode(' ', $classes);
+        $classes = preg_grep("/(page-)(\S+)(-sv)/", $classes);
+
+        if (!empty($classes)) {
+          $container->setHash(reset($classes));
+        }
+
         $crawler->filter('h1.page-title')->each(function ($node) use ($container) {
             $container->setTitle($node->text());
         });
@@ -193,6 +211,14 @@ class CSLibraryService extends ScrapperService
     public function libraryScrap(string $url, LibraryContainerInterface $container) : void
     {
         $crawler = $this->getTransport()->request('GET', $url);
+
+        $classes = $crawler->filter('body')->attr('class');
+        $classes = explode(' ', $classes);
+        $classes = preg_grep("/(page-)(\S+)(-sv)/", $classes);
+
+        if (!empty($classes)) {
+          $container->setHash(reset($classes));
+        }
 
         $title = $crawler->filter('h1.page-title')->first()->text() ?? '';
         $container->setTitle($title);
