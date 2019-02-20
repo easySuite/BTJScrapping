@@ -17,44 +17,50 @@ class CSLibraryService extends ScrapperService
 
     public function getEventsLinks($url) : array
     {
-        $links = [];
-        $year = date('Y');
-        for ($i = 1; $i <= 12; $i++) {
-            $month = date('m', strtotime("$i/1/$year"));
-            $first = "$year-$month-01";
-
-            $date = new DateTime($first);
-            $date->modify('last day of this month');
-            $last = $date->format('Y-m-d');
-
-            $crawler = $this->getTransport()->request('GET', $url . "/calendar/html?fDateMin=$first&fDateMax=$last");
-            $month_links = $crawler->filter('a.page-link')->each(function ($node) {
-                return $node->attr('href');
-            });
-            $links = array_merge($links, $month_links);
+        $list = [];
+        $events = [];
+        $crawler = $this->getTransport()->request('GET', $url . "/calendar/html");
+        $links = $crawler->filter('a.page-link')->links();
+        foreach ($links as $link) {
+            $events[] = $link->getURI();
         }
 
-        return array_unique(array_filter($links));
+        foreach ($events as $event) {
+            $crawler = $this->getTransport()->request('GET', $event);
+            $occurrences = $crawler->filter('#all-occurrences-list a')->links();
+            foreach ($occurrences as $occurrence) {
+                $uri = $occurrence->getURI();
+                $list[md5($uri)] = $uri;
+            }
+        }
+
+        return $list;
     }
 
     public function getNewsLinks($url) : array
     {
+        $list = [];
         $crawler = $this->getTransport()->request('GET', $url . '/search/content/html?fType=news');
-        $links = $crawler->filter('a.page-link')->each(function ($node) {
-            return $node->attr('href');
-        });
+        $links = $crawler->filter('a.page-link')->links();
+        foreach ($links as $link) {
+            $uri = $link->getURI();
+            $list[md5($uri)] = $uri;
+        }
 
-        return array_filter($links);
+        return $list;
     }
 
     public function getLibrariesLinks($url) : array
     {
+        $list = [];
         $crawler = $this->getTransport()->request('GET', $url . '/opening-hours?culture=sv');
-        $links = $crawler->filter('a.library-name')->each(function ($node) {
-            return $node->attr('href');
-        });
+        $links = $crawler->filter('a.library-name')->links();
+        foreach ($links as $link) {
+            $uri = $link->getURI();
+            $list[md5($uri)] = $uri;
+        }
 
-        return array_filter($links);
+      return $list;
     }
 
     /**
@@ -69,15 +75,7 @@ class CSLibraryService extends ScrapperService
     {
         $crawler = $this->getTransport()->request('GET', $url);
 
-        $classes = $crawler->filter('body')->attr('class');
-        $classes = explode(' ', $classes);
-        $classes = preg_grep("/(page-)(\S+)(-sv)/", $classes);
-
-        $matches = [];
-        preg_match('/[^\/]+$/', $url, $matches);
-        if (!empty($classes) && !empty($matches)) {
-          $container->setHash(reset($classes) . reset($matches));
-        }
+        $container->setURL($url);
 
         $crawler->filter('h1.page-title')->each(function ($node) use ($container) {
             $container->setTitle($node->text());
@@ -88,7 +86,6 @@ class CSLibraryService extends ScrapperService
         });
 
         $crawler->filter('.template .zone-1')->each(function ($node) use ($container) {
-            $body = '';
             $children = $node->children()->each(function ($child) {
                 if ($child->nodeName() == 'script') {
                     unset($child);
@@ -162,13 +159,7 @@ class CSLibraryService extends ScrapperService
     {
         $crawler = $this->getTransport()->request('GET', $url);
 
-        $classes = $crawler->filter('body')->attr('class');
-        $classes = explode(' ', $classes);
-        $classes = preg_grep("/(page-)(\S+)(-sv)/", $classes);
-
-        if (!empty($classes)) {
-          $container->setHash(reset($classes));
-        }
+        $container->setURL($url);
 
         $crawler->filter('h1.page-title')->each(function ($node) use ($container) {
             $container->setTitle($node->text());
@@ -212,13 +203,7 @@ class CSLibraryService extends ScrapperService
     {
         $crawler = $this->getTransport()->request('GET', $url);
 
-        $classes = $crawler->filter('body')->attr('class');
-        $classes = explode(' ', $classes);
-        $classes = preg_grep("/(page-)(\S+)(-sv)/", $classes);
-
-        if (!empty($classes)) {
-          $container->setHash(reset($classes));
-        }
+        $container->setURL($url);
 
         $title = $crawler->filter('h1.page-title')->first()->text() ?? '';
         $container->setTitle($title);
@@ -231,7 +216,6 @@ class CSLibraryService extends ScrapperService
         $container->setTitleImage($image_url);
 
         $crawler->filter('.template .zone-1')->each(function ($node) use ($container) {
-            $body = '';
             $children = $node->children()->each(function ($child) {
                 if ($child->nodeName() == 'script') {
                     unset($child);
