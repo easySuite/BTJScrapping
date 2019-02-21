@@ -14,7 +14,7 @@ abstract class Container
 
     private $body;
 
-    private $hash = NULL;
+    private $url = NULL;
 
     /**
      * Set container title.
@@ -71,29 +71,29 @@ abstract class Container
     }
 
   /**
-   * Set container hash.
+   * Set container url.
    *
-   * @param string $hash
-   *   Container hash.
+   * @param string $url
+   *   Container url.
    *
    * @return \BTJ\Scrapper\Container\Container
    *   Container object.
    */
-    public function setHash($hash): Container
+    public function setURL($url): Container
     {
-        $this->hash = md5($hash);
+        $this->url = $url;
 
         return $this;
     }
 
   /**
-   * Get container hash.
+   * Get container url.
    *
    * @return string
    *   Body.
    */
-    public function getHash(): string
+    public function getURL(): string
     {
-        return $this->hash;
+        return $this->url;
     }
 }
