@@ -16,6 +16,17 @@ abstract class ScrapperService
 {
     private $transport;
 
+    protected $identifier;
+
+  /**
+   * Gets the service identifier.
+   *
+   * @return string
+   */
+    public function getIdentifier(): string {
+      return $this->identifier;
+    }
+
     /**
      * Parse event page.
      *
@@ -32,6 +43,8 @@ abstract class ScrapperService
     abstract public function getEventsLinks($url) : array;
 
     abstract public function getLibrariesLinks($url) : array;
+
+    abstract public function getNewsLinks($url) : array;
 
     /**
      * Parse news page.

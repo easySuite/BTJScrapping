@@ -5,11 +5,11 @@ namespace BTJ\Scrapper\Transport;
 use Goutte\Client;
 
 /**
- * Class GouteHttpTransport.
+ * Class GoutteHttpTransport.
  *
  * @package BTJ\Scrapper\Transport
  */
-class GouteHttpTransport implements HttpTransportInterface
+class GoutteHttpTransport implements HttpTransportInterface
 {
     private $transport = null;
 
