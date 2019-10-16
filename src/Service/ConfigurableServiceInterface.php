@@ -16,5 +16,10 @@ interface ConfigurableServiceInterface {
    *   A set of css identifiers.
    */
   public function getConfig(): array;
+
+  /**
+   * @return array
+   */
+  public function setConfig(array $config): self;
 }
 

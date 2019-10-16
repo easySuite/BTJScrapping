@@ -8,8 +8,10 @@ namespace BTJ\Scrapper\Service;
 trait ConfigurableServiceTrait {
   protected $config;
 
-  public function setConfig(array $config) {
+  public function setConfig(array $config): ConfigurableServiceInterface {
     $this->config = $config;
+
+    return $this;
   }
 
   public function getConfig(): array {

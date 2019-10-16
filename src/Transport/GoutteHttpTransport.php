@@ -18,21 +18,17 @@ class GoutteHttpTransport implements HttpTransportInterface
      */
     public function request($method, $url)
     {
-        return $this->getTransport()->request($method, $url);
+        return $this->getClient()->request($method, $url);
     }
 
-    /**
-     * Get transport client.
-     *
-     * @return Client|null
-     *   Transport client.
-     */
-    private function getTransport()
-    {
-        if ($this->transport === null) {
-            $this->transport = new Client();
-        }
+   /**
+    * {@inheritdoc}
+    */
+    public function getClient(): Client {
+      if ($this->transport === null) {
+        $this->transport = new Client();
+      }
 
-        return $this->transport;
+      return $this->transport;
     }
 }
