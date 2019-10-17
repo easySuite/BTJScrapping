@@ -10,11 +10,11 @@ namespace BTJ\Scrapper\Container;
 abstract class Container
 {
 
-    private $title;
+    private $title = '';
 
-    private $body;
+    private $body = '';
 
-    private $url = NULL;
+    private $url = '';
 
     /**
      * Set container title.

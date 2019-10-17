@@ -20,6 +20,11 @@ class AxiellLibraryService extends ScrapperService implements ConfigurableServic
   use ConfigurableServiceTrait;
 
   /**
+   * Extend the wait time to this amount to prevent timeouts.
+   */
+  public const REQUEST_RESET_TTL = 30;
+
+    /**
    * AxiellLibraryService constructor.
    *
    * @param \BTJ\Scrapper\Transport\HttpTransportInterface $transport
@@ -42,10 +47,12 @@ class AxiellLibraryService extends ScrapperService implements ConfigurableServic
     /** @var \Symfony\Component\DomCrawler\Crawler $crawler */
     $crawler = $client->request('GET', $url);
 
-    $eventSelector = $this->config['events']['crawler']['link_selector'];
-    $pagerSelector = $this->config['events']['crawler']['pager_next_selector'];
+    $eventSelector = $this->config['events']['crawler']['link_selector'] ?? '';
+    $pagerSelector = $this->config['events']['crawler']['pager_next_selector'] ?? '';
 
     $eventLinks = [];
+    // TODO: This IS slow. It must traverse all event links explicitly.
+    // TODO: Batch this somehow.
     do {
       /** @var \Symfony\Component\DomCrawler\Link[] $linkCandidates */
       $linkCandidates = $crawler->filter($eventSelector)->links();
@@ -56,15 +63,17 @@ class AxiellLibraryService extends ScrapperService implements ConfigurableServic
         // ... therefore after an event landing page is loaded
         // we can grab the actual event link...
         $eventLinks[] = $crawler->getUri();
+
+        break(2);
         // ... and go back to search result.
         $crawler = $client->back();
       }
 
       $pagerLinks = $crawler->filter($pagerSelector);
       if ($pagerLinks->count() > 0) {
-        /** @var \Symfony\Component\DomCrawler\Link $link */
-        $link = $pagerLinks->first()->link();
-
+        // This cookie stores the session data which is used to navigate
+        // the site. Without sessions cookie pagination and event links
+        // do not lead to expected pages.
         /** @var \Symfony\Component\BrowserKit\Cookie $sessionCookie */
         $sessionCookie = $client->getCookieJar()->get('JSESSIONID');
         $cookieJar = new CookieJar();
@@ -73,8 +82,13 @@ class AxiellLibraryService extends ScrapperService implements ConfigurableServic
         // the results at all.
         $client = new Client([], null, $cookieJar);
 
+        /** @var \Symfony\Component\DomCrawler\Link $link */
+        $link = $pagerLinks->first()->link();
         $crawler = $client->request('GET', $link->getUri());
       }
+
+      // Extend the time limit to reach all events.
+      set_time_limit(self::REQUEST_RESET_TTL);
     }
     while ($pagerLinks->count() > 0);
 
@@ -102,7 +116,27 @@ class AxiellLibraryService extends ScrapperService implements ConfigurableServic
     string $url,
     EventContainerInterface $container
   ): void {
+    $crawler = $this->getTransport()->request('GET', $url);
 
+    $container->setUrl($url);
+
+    $mapping = $this->config['events']['field_mapping'] ?? [];
+
+    foreach ($mapping as $eventContainerField => $mappedSelector) {
+      $selector = $mappedSelector['selector'];
+
+      if (empty($selector)) {
+        continue;
+      }
+
+      $crawler->filter($selector)->each(function ($node) use ($container, $eventContainerField) {
+        $method = 'set' . ucfirst($eventContainerField);
+
+        if (method_exists($container, $method)) {
+          $container->$method($node->text());
+        }
+      });
+    }
   }
 
   /**
