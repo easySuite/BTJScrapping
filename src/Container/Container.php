@@ -54,7 +54,9 @@ abstract class Container
    */
     public function setBody($body): Container
     {
-        $this->body = $body;
+        $url = parse_url($this->url);
+        $domain = "{$url['scheme']}://{$url['host']}";
+        $this->body = preg_replace('/src="(\/[^"]*)"/', 'src="' . $domain . '$1"', $body);
 
         return $this;
     }

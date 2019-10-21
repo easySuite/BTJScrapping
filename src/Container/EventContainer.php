@@ -37,7 +37,7 @@ class EventContainer extends Container implements EventContainerInterface
      */
     public function setLead($lead): EventContainer
     {
-        $this->lead = $lead;
+        $this->lead = trim(strip_tags(str_replace(['<br>', '<br />', '<br/>'], "\n", $lead)));
 
         return $this;
     }

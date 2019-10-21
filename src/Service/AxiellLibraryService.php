@@ -58,9 +58,9 @@ class AxiellLibraryService extends ScrapperService implements ConfigurableServic
       $linkCandidates = $crawler->filter($eventSelector)->links();
       foreach ($linkCandidates as $linkCandidate) {
         // Actually click the link to get a proper event link, since it's
-        // a redirect...
+        // a redirect.
         $crawler = $client->click($linkCandidate);
-        // ... therefore after an event landing page is loaded
+        // After an event landing page is loaded
         // we can grab the actual event link...
         $eventLinks[] = $crawler->getUri();
 
@@ -116,26 +116,29 @@ class AxiellLibraryService extends ScrapperService implements ConfigurableServic
     string $url,
     EventContainerInterface $container
   ): void {
+    /** @var \Symfony\Component\DomCrawler\Crawler $crawler */
     $crawler = $this->getTransport()->request('GET', $url);
 
     $container->setUrl($url);
 
-    $mapping = $this->config['events']['field_mapping'] ?? [];
+    $mapping = $this->config['events']['field_mapping']['mapping_table'] ?? [];
 
     foreach ($mapping as $eventContainerField => $mappedSelector) {
       $selector = $mappedSelector['selector'];
-
       if (empty($selector)) {
         continue;
       }
 
-      $crawler->filter($selector)->each(function ($node) use ($container, $eventContainerField) {
-        $method = 'set' . ucfirst($eventContainerField);
+      $elementCandidates = $crawler->filter($selector);
+      if (!$elementCandidates->count()) {
+        continue;
+      }
 
-        if (method_exists($container, $method)) {
-          $container->$method($node->text());
-        }
-      });
+      $method = 'set' . ucfirst($eventContainerField);
+      if (method_exists($container, $method)) {
+        $element = $elementCandidates->first();
+        call_user_func([$container, $method], $element->html());
+      }
     }
   }
 
