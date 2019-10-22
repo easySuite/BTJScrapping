@@ -137,7 +137,19 @@ class AxiellLibraryService extends ScrapperService implements ConfigurableServic
       $method = 'set' . ucfirst($eventContainerField);
       if (method_exists($container, $method)) {
         $element = $elementCandidates->first();
-        call_user_func([$container, $method], $element->html());
+        $content = $element->html();
+
+        if (!empty($mappedSelector['regex'])) {
+          $regex = $mappedSelector['regex'];
+          $matches = [];
+          preg_match("/{$regex}/", $element->html(), $matches);
+
+          if (!empty($matches[1])) {
+            $content = $matches[1];
+          }
+        }
+
+        call_user_func([$container, $method], $content);
       }
     }
   }
