@@ -55,7 +55,14 @@ class EventContainer extends Container implements EventContainerInterface
      */
     public function setListImage($image) : EventContainer
     {
-        $this->listImage = $image;
+        $matches = [];
+        preg_match('~^https?://~', $image, $matches);
+
+        if (empty($matches)) {
+          $image = $this->getDomain() . $image;
+        }
+
+        $this->listImage = htmlspecialchars_decode($image);
 
         return $this;
     }
@@ -73,7 +80,14 @@ class EventContainer extends Container implements EventContainerInterface
      */
     public function setTitleImage($image) : EventContainer
     {
-        $this->titleImage = $image;
+        $matches = [];
+        preg_match('~^https?://~', $image, $matches);
+
+        if (empty($matches)) {
+          $image = $this->getDomain() . $image;
+        }
+
+        $this->titleImage = htmlspecialchars_decode($image);
 
         return $this;
     }
