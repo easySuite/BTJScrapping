@@ -140,6 +140,8 @@ class AxiellLibraryService extends ScrapperService implements ConfigurableServic
         $content = $element->html();
 
         if (!empty($mappedSelector['regex'])) {
+          $content = '';
+
           $regex = $mappedSelector['regex'];
           $matches = [];
           preg_match("{$regex}", $element->html(), $matches);
