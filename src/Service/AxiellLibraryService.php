@@ -99,7 +99,7 @@ class AxiellLibraryService extends ScrapperService implements ConfigurableServic
    * {@inheritdoc}
    */
   public function getLibrariesLinks($url): array {
-    return [];
+    return array_filter(preg_split('/\s/', $this->config['library']['crawler']['links'] ?? []));
   }
 
   /**
@@ -173,6 +173,43 @@ class AxiellLibraryService extends ScrapperService implements ConfigurableServic
     string $url,
     LibraryContainerInterface $container
   ): void {
-    // TODO: Implement libraryScrap() method.
+    /** @var \Symfony\Component\DomCrawler\Crawler $crawler */
+    $crawler = $this->getTransport()->request('GET', $url);
+
+    $container->setUrl($url);
+
+    $mapping = $this->config['library']['field_mapping']['mapping_table'] ?? [];
+
+    foreach ($mapping as $eventContainerField => $mappedSelector) {
+      $selector = $mappedSelector['selector'];
+      if (empty($selector)) {
+        continue;
+      }
+
+      $elementCandidates = $crawler->filter($selector);
+      if (!$elementCandidates->count()) {
+        continue;
+      }
+
+      $method = 'set' . ucfirst($eventContainerField);
+      if (method_exists($container, $method)) {
+        $element = $elementCandidates->first();
+        $content = $element->html();
+
+        if (!empty($mappedSelector['regex'])) {
+          $content = '';
+
+          $regex = $mappedSelector['regex'];
+          $matches = [];
+          preg_match("{$regex}", $element->html(), $matches);
+
+          if (!empty($matches[1])) {
+            $content = $matches[1];
+          }
+        }
+
+        call_user_func([$container, $method], $content);
+      }
+    }
   }
 }
