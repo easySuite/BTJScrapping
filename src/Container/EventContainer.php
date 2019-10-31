@@ -167,7 +167,7 @@ class EventContainer extends Container implements EventContainerInterface
      */
     public function setTime($time) : EventContainer
     {
-        $this->time = $time;
+        $this->time = str_replace(' ', '', $time);
 
         return $this;
     }
