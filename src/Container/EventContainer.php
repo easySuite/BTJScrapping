@@ -37,7 +37,7 @@ class EventContainer extends Container implements EventContainerInterface
      */
     public function setLead($lead): EventContainer
     {
-        $this->lead = $lead;
+        $this->lead = trim(strip_tags(str_replace(['<br>', '<br />', '<br/>'], "\n", $lead)));
 
         return $this;
     }
@@ -55,7 +55,18 @@ class EventContainer extends Container implements EventContainerInterface
      */
     public function setListImage($image) : EventContainer
     {
-        $this->listImage = $image;
+        if (empty($image)) {
+          return $this;
+        }
+
+        $matches = [];
+        preg_match('~^https?://~', $image, $matches);
+
+        if (empty($matches)) {
+          $image = $this->getDomain() . $image;
+        }
+
+        $this->listImage = htmlspecialchars_decode($image);
 
         return $this;
     }
@@ -73,7 +84,18 @@ class EventContainer extends Container implements EventContainerInterface
      */
     public function setTitleImage($image) : EventContainer
     {
-        $this->titleImage = $image;
+        if (empty($image)) {
+          return $this;
+        }
+
+        $matches = [];
+        preg_match('~^https?://~', $image, $matches);
+
+        if (empty($matches)) {
+          $image = $this->getDomain() . $image;
+        }
+
+        $this->titleImage = htmlspecialchars_decode($image);
 
         return $this;
     }
@@ -145,7 +167,7 @@ class EventContainer extends Container implements EventContainerInterface
      */
     public function setTime($time) : EventContainer
     {
-        $this->time = $time;
+        $this->time = str_replace(' ', '', $time);
 
         return $this;
     }

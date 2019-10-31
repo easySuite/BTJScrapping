@@ -10,11 +10,11 @@ namespace BTJ\Scrapper\Container;
 abstract class Container
 {
 
-    private $title;
+    private $title = '';
 
-    private $body;
+    private $body = '';
 
-    private $url = NULL;
+    private $url = '';
 
     /**
      * Set container title.
@@ -54,7 +54,8 @@ abstract class Container
    */
     public function setBody($body): Container
     {
-        $this->body = $body;
+        $domain = $this->getDomain();
+        $this->body = preg_replace('/src="(\/[^"]*)"/', 'src="' . $domain . '$1"', $body);
 
         return $this;
     }
@@ -95,5 +96,12 @@ abstract class Container
     public function getURL(): string
     {
         return $this->url;
+    }
+
+    public function getDomain():?string {
+      $url = parse_url($this->url);
+      $domain = "{$url['scheme']}://{$url['host']}";
+
+      return $domain;
     }
 }

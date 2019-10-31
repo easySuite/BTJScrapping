@@ -2,6 +2,7 @@
 
 namespace BTJ\Scrapper\Service;
 
+use BTJ\Scrapper\Transport\HttpTransportInterface;
 use \DateTime;
 use BTJ\Scrapper\Container\EventContainerInterface;
 use BTJ\Scrapper\Container\LibraryContainerInterface;
@@ -9,13 +10,17 @@ use BTJ\Scrapper\Container\NewsContainerInterface;
 
 /**
  * Class CSLibraryService.
- *
- * @package BTJ\Scrapper\Service
  */
 class CSLibraryService extends ScrapperService
 {
 
-    public function getEventsLinks($url) : array
+  public function __construct(HttpTransportInterface $transport) {
+    $this->identifier = 'cslibrary';
+
+    parent::__construct($transport);
+  }
+
+  public function getEventsLinks($url) : array
     {
         $list = [];
         $events = [];

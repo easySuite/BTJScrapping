@@ -2,6 +2,8 @@
 
 namespace BTJ\Scrapper\Transport;
 
+use Goutte\Client;
+
 /**
  * Interface HttpTransportInterface.
  *
@@ -22,4 +24,9 @@ interface HttpTransportInterface
    *   Transport crawler.
    */
     public function request($method, $url);
+
+  /**
+   * @return \Goutte\Client
+   */
+    public function getClient(): Client;
 }
