@@ -40,6 +40,10 @@ class AxiellLibraryService extends ScrapperService implements ConfigurableServic
    * {@inheritdoc}
    */
   public function getEventsLinks($url): array {
+    if (empty($this->config)) {
+      return [];
+    }
+
     $url .= $this->config['events']['crawler']['uri'] ?? '';
 
     /** @var \Goutte\Client $client */
@@ -98,7 +102,11 @@ class AxiellLibraryService extends ScrapperService implements ConfigurableServic
    * {@inheritdoc}
    */
   public function getLibrariesLinks($url): array {
-    $lines = preg_split('/\s/', $this->config['library']['crawler']['links'] ?? []);
+    if (empty($this->config)) {
+      return [];
+    }
+
+    $lines = preg_split('/\s/', $this->config['library']['crawler']['links'] ?? '') ?? [];
     return is_array($lines) ? array_filter($lines) : [];
   }
 
