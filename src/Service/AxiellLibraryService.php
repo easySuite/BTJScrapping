@@ -64,7 +64,6 @@ class AxiellLibraryService extends ScrapperService implements ConfigurableServic
         // we can grab the actual event link...
         $eventLinks[] = $crawler->getUri();
 
-        break(2);
         // ... and go back to search result.
         $crawler = $client->back();
       }
@@ -99,7 +98,8 @@ class AxiellLibraryService extends ScrapperService implements ConfigurableServic
    * {@inheritdoc}
    */
   public function getLibrariesLinks($url): array {
-    return array_filter(preg_split('/\s/', $this->config['library']['crawler']['links'] ?? []));
+    $lines = preg_split('/\s/', $this->config['library']['crawler']['links'] ?? []);
+    return is_array($lines) ? array_filter($lines) : [];
   }
 
   /**
