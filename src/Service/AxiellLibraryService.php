@@ -24,6 +24,11 @@ class AxiellLibraryService extends ScrapperService implements ConfigurableServic
    */
   public const REQUEST_RESET_TTL = 30;
 
+  /**
+   * Amount pages for crawler to iterate.
+   */
+  public const PAGE_LOOK_AHEAD = 5;
+
     /**
    * AxiellLibraryService constructor.
    *
@@ -54,10 +59,12 @@ class AxiellLibraryService extends ScrapperService implements ConfigurableServic
     $eventSelector = $this->config['events']['crawler']['link_selector'] ?? '';
     $pagerSelector = $this->config['events']['crawler']['pager_next_selector'] ?? '';
 
+    $page = 0;
     $eventLinks = [];
     // TODO: This IS slow. It must traverse all event links explicitly.
     // TODO: Batch this somehow.
     do {
+      $page++;
       /** @var \Symfony\Component\DomCrawler\Link[] $linkCandidates */
       $linkCandidates = $crawler->filter($eventSelector)->links();
       foreach ($linkCandidates as $linkCandidate) {
@@ -93,7 +100,7 @@ class AxiellLibraryService extends ScrapperService implements ConfigurableServic
       // Extend the time limit to reach all events.
       set_time_limit(self::REQUEST_RESET_TTL);
     }
-    while ($pagerLinks->count() > 0);
+    while ($pagerLinks->count() > 0 && $page < self::PAGE_LOOK_AHEAD);
 
     return $eventLinks;
   }

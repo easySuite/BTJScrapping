@@ -277,7 +277,7 @@ class CSLibraryService extends ScrapperService
             return $day_map[$node->text()];
         });
 
-        $hours = $crawler->filter('ol.hours-list li')->each(function ($node) {
+        $hours = $crawler->filter('ol.hours-list li:first-of-type')->each(function ($node) {
             return $node->text();
         });
         $hours = array_combine($days, $hours);
