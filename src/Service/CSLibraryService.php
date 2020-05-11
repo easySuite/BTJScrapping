@@ -3,7 +3,6 @@
 namespace BTJ\Scrapper\Service;
 
 use BTJ\Scrapper\Transport\HttpTransportInterface;
-use \DateTime;
 use BTJ\Scrapper\Container\EventContainerInterface;
 use BTJ\Scrapper\Container\LibraryContainerInterface;
 use BTJ\Scrapper\Container\NewsContainerInterface;
@@ -11,37 +10,55 @@ use BTJ\Scrapper\Container\NewsContainerInterface;
 /**
  * Class CSLibraryService.
  */
-class CSLibraryService extends ScrapperService
+class CSLibraryService extends ScrapperService implements ConfigurableServiceInterface
 {
 
-  public function __construct(HttpTransportInterface $transport) {
-    $this->identifier = 'cslibrary';
+    use ConfigurableServiceTrait;
 
-    parent::__construct($transport);
-  }
+    /**
+     * CSLibraryService constructor.
+     *
+     * @param \BTJ\Scrapper\Transport\HttpTransportInterface $transport
+     *   HTTP request transport.
+     */
+    public function __construct(HttpTransportInterface $transport, $limit = 50) {
+      $this->identifier = 'cslibrary';
+      $this->setScrapingLimit($limit);
 
-  public function getEventsLinks($url) : array
-    {
-        $list = [];
-        $events = [];
-        $crawler = $this->getTransport()->request('GET', $url . "/calendar/html");
-        $links = $crawler->filter('a.page-link')->links();
-        foreach ($links as $link) {
-            $events[] = $link->getURI();
-        }
-
-        foreach ($events as $event) {
-            $crawler = $this->getTransport()->request('GET', $event);
-            $occurrences = $crawler->filter('#all-occurrences-list a')->links();
-            foreach ($occurrences as $occurrence) {
-                $uri = $occurrence->getURI();
-                $list[md5($uri)] = $uri;
-            }
-        }
-
-        return $list;
+      parent::__construct($transport);
     }
 
+    /**
+     * {@inheritdoc}
+     */
+    public function getEventsLinks($url) : array {
+          $list = [];
+          $events = [];
+          $crawler = $this->getTransport()->request('GET', $url . "/calendar/html");
+          $links = $crawler->filter('a.page-link')->links();
+          foreach ($links as $link) {
+              $events[] = $link->getURI();
+          }
+
+          foreach ($events as $event) {
+              $crawler = $this->getTransport()->request('GET', $event);
+              $occurrences = $crawler->filter('#all-occurrences-list a')->links();
+              foreach ($occurrences as $occurrence) {
+                  $uri = $occurrence->getURI();
+                  $list[md5($uri)] = $uri;
+
+                  if (count($list) >= $this->getScrapingLimit()) {
+                      break(2);
+                  }
+              }
+          }
+
+          return $list;
+      }
+
+    /**
+     * {@inheritDoc}
+     */
     public function getNewsLinks($url) : array
     {
         $list = [];
@@ -50,11 +67,18 @@ class CSLibraryService extends ScrapperService
         foreach ($links as $link) {
             $uri = $link->getURI();
             $list[md5($uri)] = $uri;
+
+            if (count($list) >= $this->getScrapingLimit()) {
+                break;
+            }
         }
 
         return $list;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function getLibrariesLinks($url) : array
     {
         $list = [];
@@ -63,18 +87,17 @@ class CSLibraryService extends ScrapperService
         foreach ($links as $link) {
             $uri = $link->getURI();
             $list[md5($uri)] = $uri;
+
+            if (count($list) >= $this->getScrapingLimit()) {
+                break;
+            }
         }
 
       return $list;
     }
 
     /**
-     * Scrap a CS Library CMS event page.
-     *
-     * @param string $url
-     *   Event page url.
-     * @param \BTJ\Scrapper\Container\EventContainerInterface $container
-     *   Scrapping container object.
+     * {@inheritDoc}
      */
     public function eventScrap(string $url, EventContainerInterface $container) : void
     {
@@ -153,12 +176,7 @@ class CSLibraryService extends ScrapperService
     }
 
     /**
-     * Scrap a CS Library CMS news page.
-     *
-     * @param string $url
-     *   News page url.
-     * @param \BTJ\Scrapper\Container\NewsContainerInterface $container
-     *   News container object.
+     * {@inheritDoc}
      */
     public function newsScrap(string $url, NewsContainerInterface $container) : void
     {
@@ -196,13 +214,9 @@ class CSLibraryService extends ScrapperService
         $container->setTags($tags);
     }
 
+
     /**
-     * Scrap a CS Library CMS library page.
-     *
-     * @param string $url
-     *   Library page url.
-     * @param \BTJ\Scrapper\Container\LibraryContainerInterface $container
-     *   Library container object.
+     * {@inheritDoc}
      */
     public function libraryScrap(string $url, LibraryContainerInterface $container) : void
     {
